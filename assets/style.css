@@ -30,6 +30,7 @@ footer, header, hgroup, menu, nav, section {
 }
 body {
 	line-height: 1;
+	background-color: #FFFEF8;
 }
 ol, ul {
 	list-style: none;
@@ -48,34 +49,41 @@ table {
 }
 /** end reset css**/
 body {
-	max-width: 1140px;
-	margin:auto;
 	font-family: 'Work Sans' ;
 	font-size: 14px;
+}
+
+header, main, footer nav{
+	max-width: 1140px;
+	margin:auto;
 }
 header {
 	display: flex;
 	justify-content: space-between;
-	margin: 50px 0
+	padding: 50px 0;
+}
+header nav img{
+	width: 22px;
+	height: 22px;
 }
 section {
 	margin: 50px 0
 }
 
-h1{
+h1 a{
 	display: flex;
 	flex-direction: column;
 	font-family: 'Syne';
 	font-size: 22px;
 	font-weight: 800;
-	color: #B1663C
+	color: #B1663C;
+	text-decoration: none;
 }
 
-h1 > span {
+h1 span {
 	font-family: 'Work Sans';
 	font-size:10px;
 	letter-spacing: 0.1em;
-;
 }
 
 h2{
@@ -88,16 +96,28 @@ nav ul {
 	display: flex;
 	align-items: center;
 	list-style-type: none;
+	column-gap: 44px;
 
 }
 nav li {
 	padding: 0 10px;
 	font-size: 1.2em;
 }
-
+nav a{
+	text-decoration: none;
+	color: #000;
+	&:hover{
+		color: #B1663C;
+		font-weight: 600;
+	}
+	&.active{
+		font-weight: 600;
+	}
+}
 li:hover {
 	color: #B1663C;
 }
+
 #introduction {
 	display: flex;
 	align-items: center;
@@ -160,50 +180,81 @@ li:hover {
 }
 #contact {
 	width: 50%;
-margin: auto;
+	margin: auto;
 }
-#contact > * {
+#login{
+	width: 379px;
+	margin: 150px auto 255px;
+}
+#contact > *,
+#login > *{
 	text-align: center;
 
 }
-#contact h2{
+#contact h2,
+#login h2{
 	margin-bottom: 20px;
 }
-#contact form {
+#contact form,
+#login form {
 	text-align: left;
 	margin-top:30px;
 	display: flex;
 	flex-direction: column;
 }
 
-#contact input {
+input {
 	height: 50px;
 	font-size: 1.2em;
 	border: none;
 	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
 }
-#contact label {
+#contact label,
+#login label {
 	margin: 2em 0 1em 0;
 }
 #contact textarea {
 	border: none;
 	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
 }
+#login a{
+	display: block;
+	color: #3D3D3D;
+}
+input{
+	background-color: #fff;
+}
 
 input[type="submit"]{
 	font-family: 'Syne';
 	font-weight: 700;
+	font-size: 14px;
 	color: white;
 	background-color: #1D6154;
-	margin : 2em auto ;
-	width: 180px;
+	margin: 2em auto;
+	width: 179px;
+	height: 36px;
 	text-align: center;
-	border-radius: 60px ;
+	border-radius: 60px;
+	&:hover{
+		cursor: pointer;
+	}
 }
-
+footer{
+	background: #fff;
+}
+footer nav{
+	padding: 24px 0 20px 0;
+}
 footer nav ul {
 	display: flex;
 	justify-content: flex-end;
-	margin: 2em
+	margin: 2em;
+	
+	li{
+		font-weight: 300;
+		font-size: 14px;
+	}
 }
+
 
