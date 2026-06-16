@@ -24,14 +24,16 @@ function afficherMessageErreur(message) {
     baliseMessage.classList.add("message-erreur");
 
     formulaireLogin.appendChild(baliseMessage);
-  } else if (message === "") {
-    baliseMessage.remove();
   }
 
-  baliseMessage.innerText = message;
+  if (message === "") {
+    baliseMessage.remove();
+  } else {
+    baliseMessage.innerText = message;
+  }
 }
 
-function envoiRequete(formulaireLogin) {
+function envoiFormulaireLogin(formulaireLogin) {
   formulaireLogin.addEventListener("submit", (event) => {
     try {
       event.preventDefault();
@@ -45,14 +47,12 @@ function envoiRequete(formulaireLogin) {
 
       afficherMessageErreur("");
 
-      //   //creation de l'objet login/mdp
+      //   //Envoi à l'API
       //   const login = {
-      //     email: event.target.querySelector("[name=email]").value,
-      //     password: event.target.querySelector("[name=mdp]").value,
+      //     email: event.target.email.value,
+      //     password: event.target.password.value,
       //   };
-      //   // Création de la charge utile au format JSON
       //   const chargeUtile = JSON.stringify(login);
-      //   // Appel de la fonction fetch avec toutes les informations nécessaires
       //   fetch("http://localhost:5678/api/users/login", {
       //     method: "POST",
       //     headers: { "Content-Type": "application/json" },
@@ -64,4 +64,4 @@ function envoiRequete(formulaireLogin) {
   });
 }
 
-envoiRequete(formulaireLogin);
+envoiFormulaireLogin(formulaireLogin);
