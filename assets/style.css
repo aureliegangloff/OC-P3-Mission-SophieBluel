@@ -203,12 +203,6 @@ li:hover {
 	flex-direction: column;
 }
 
-input {
-	height: 50px;
-	font-size: 1.2em;
-	border: none;
-	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
-}
 #contact label,
 #login label {
 	margin: 2em 0 1em 0;
@@ -221,10 +215,21 @@ input {
 	display: block;
 	color: #3D3D3D;
 }
-input{
-	background-color: #fff;
+
+.message-erreur{
+	border: 2px solid red;
+	color: red;
+	padding: 15px;
+	margin-bottom: 10px;
 }
 
+input {
+	height: 50px;
+	font-size: 1.2em;
+	border: none;
+	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
+	background-color: #fff;
+}
 input[type="submit"]{
 	font-family: 'Syne';
 	font-weight: 700;
