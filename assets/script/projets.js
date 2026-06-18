@@ -6,10 +6,12 @@ export function afficherProjets(travaux) {
   const baliseGallerie = document.querySelector(".gallery");
   baliseGallerie.innerHTML = "";
   for (let i = 0; i < travaux.length; i++) {
-    const projet = document.createElement("figure");
-    projet.innerHTML += `<img src="${travaux[i].imageUrl}" alt="${travaux[i].title}" />
-            <figcaption>${travaux[i].title}</figcaption>`;
-    baliseGallerie.appendChild(projet);
+    baliseGallerie.innerHTML += `
+      <figure>
+        <img src="${travaux[i].imageUrl}" alt="${travaux[i].title}">
+        <figcaption>${travaux[i].title}</figcaption>
+      </figure>
+    `;
   }
 }
 
@@ -29,11 +31,11 @@ export function afficherFiltres(categories) {
   baliseNav.appendChild(btnTous);
 
   //création des filtres
-  for (const categorie of categories) {
+  for (let i = 0; i < categories.length; i++) {
     const btnFiltre = document.createElement("button");
     btnFiltre.setAttribute("type", "button");
-    btnFiltre.dataset.id = `${categorie.id}`;
-    btnFiltre.innerText += `${categorie.name}`;
+    btnFiltre.dataset.id = `${categories[i].id}`;
+    btnFiltre.innerText += `${categories[i].name}`;
     baliseNav.appendChild(btnFiltre);
   }
 
@@ -49,11 +51,11 @@ export function afficherFiltres(categories) {
  */
 export function filtrerProjet(btnsFiltre, travaux) {
   btnsFiltre.forEach((btn) => {
-    btn.addEventListener("click", function (event) {
+    btn.addEventListener("click", (event) => {
       //ajout de la classe select sur le btn sélectionné
-      btnsFiltre.forEach((btn) => {
-        btn.classList.remove("select");
-      });
+      for (let i = 0; i < btnsFiltre.length; i++) {
+        btnsFiltre[i].classList.remove("select");
+      }
       btn.classList.add("select");
 
       let categorieSelectionnee = event.target.dataset.id;
@@ -61,9 +63,9 @@ export function filtrerProjet(btnsFiltre, travaux) {
 
       // On sélectionne les projets qui ont pour categorie la categorie cliquée
       if (categorieSelectionnee != 0) {
-        travauxFiltres = travaux.filter(function (projet) {
-          return projet.category.id === Number(categorieSelectionnee);
-        });
+        travauxFiltres = travaux.filter(
+          (projet) => projet.category.id === Number(categorieSelectionnee),
+        );
       }
 
       afficherProjets(travauxFiltres);
