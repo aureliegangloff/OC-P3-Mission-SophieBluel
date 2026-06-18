@@ -72,3 +72,28 @@ export function filtrerProjet(btnsFiltre, travaux) {
     });
   });
 }
+
+export function afficherModeEdition(token) {
+  const lienLogin = document.getElementById("lien-login");
+  if (token) {
+    lienLogin.innerText = "logout";
+
+    // Ajout de la bannière de login
+    const banniereLogin = document.createElement("div");
+    banniereLogin.classList.add("banniere-login");
+    banniereLogin.innerHTML += `<i class="fa-solid fa-pen-to-square"></i> Mode édition`;
+    document.body.prepend(banniereLogin);
+
+    // Ajout du bouton "modifier" sur le titre "Mes projets"
+    const btnModifier = document.createElement("button");
+    btnModifier.setAttribute("type", "button");
+    btnModifier.classList.add("btn-modifier");
+    const contenuBtnModifier = `<i class="fa-solid fa-pen-to-square"></i> modifier`;
+    btnModifier.innerHTML += contenuBtnModifier;
+
+    const baliseTitrePortfolio = document.querySelector("#portfolio h2");
+    baliseTitrePortfolio.append(btnModifier);
+  } else {
+    lienLogin.innerText = "login";
+  }
+}

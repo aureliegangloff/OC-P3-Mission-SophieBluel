@@ -148,6 +148,9 @@ li:hover {
 #introduction p {
 	margin-bottom: 0.5em;
 }
+#portfolio{
+	margin-top: 139px;
+}
 #portfolio h2 {
 	text-align: center;
 }
@@ -266,4 +269,38 @@ footer nav ul {
 	}
 }
 
+/** Mode connecté **/
+.banniere-login{
+	background-color: #000;
+	color: #fff;
+	display: flex;
+	height: 59px;
+	justify-content: center;
+    align-items: center;
+	font-size: 16px;
+	i{
+		margin-right: 12px;
+	}
+}
+#portfolio{
+	h2{
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		button{
+			border: none;
+			background-color: transparent;
+			margin-left: 31px;
+			font-family: 'Work Sans';
+			font-size: 14px;
 
+			&:hover{
+				cursor: pointer;
+			}
+		}
+	}
+	h2:has(button){
+		margin-left: 120px;
+		margin-bottom: 92px;
+	}
+}
