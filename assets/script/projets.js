@@ -73,13 +73,58 @@ export function filtrerProjet(btnsFiltre, travaux) {
   });
 }
 
-export function afficherModeEdition(token) {
+/** Mode Edition */
+/**
+ * Création de la modale
+ */
+function creerModale() {
+  const modale = document.createElement("aside");
+  modale.classList.add("modale");
+  modale.classList.add("hidden");
+  modale.innerHTML += `
+    <div class="modale-wrapper">
+      <h2>Galerie photo</h2>
+      <div class="modale-gallery"></div>
+      <hr />
+      <button type="button" class="ajout-photo">Ajouter une photo</button>
+      <button type="button" class="modale-close"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+  `;
+
+  const btnClose = document.querySelector(".modale-close");
+
+  document.body.prepend(modale);
+}
+/**
+ * Affichage de la modale
+ * @param {HTMLElement} modale
+ * @param {HTMLElement} btn
+ */
+function toggleModale(modale, btn) {
+  if (btn) {
+    btn.addEventListener("click", () => {
+      if (btn === modale) {
+        document
+          .querySelector(".modale-wrapper")
+          .addEventListener("click", (event) => {
+            event.stopPropagation();
+          });
+      }
+      modale.classList.toggle("hidden");
+    });
+  }
+}
+/**
+ * Affiche les élements HTML du mode "Edition"
+ * @param {string} token
+ */
+export function afficherModeEdition(token, travaux) {
   const lienLogin = document.getElementById("lien-login");
   if (token) {
     lienLogin.innerText = "logout";
 
     // Ajout de la bannière de login
-    const banniereLogin = document.createElement("div");
+    const banniereLogin = document.createElement("aside");
     banniereLogin.classList.add("banniere-login");
     banniereLogin.innerHTML += `<i class="fa-solid fa-pen-to-square"></i> Mode édition`;
     document.body.prepend(banniereLogin);
@@ -91,9 +136,37 @@ export function afficherModeEdition(token) {
     const contenuBtnModifier = `<i class="fa-solid fa-pen-to-square"></i> modifier`;
     btnModifier.innerHTML += contenuBtnModifier;
 
+    // Changement texte du lien de navigation "Login"
     const baliseTitrePortfolio = document.querySelector("#portfolio h2");
     baliseTitrePortfolio.append(btnModifier);
+
+    //Création de la modale
+    creerModale();
+
+    //Ouverture/fermeture modale
+    const modale = document.querySelector(".modale");
+    const btnClose = document.querySelector(".modale-close");
+    if (modale) {
+      toggleModale(modale, btnModifier);
+      toggleModale(modale, btnClose);
+      toggleModale(modale, modale);
+    }
+
+    afficherTravauxModale(travaux);
   } else {
     lienLogin.innerText = "login";
+  }
+}
+
+function afficherTravauxModale(travaux) {
+  const baliseGallerieModale = document.querySelector(".modale-gallery");
+  baliseGallerieModale.innerHTML = "";
+  for (let i = 0; i < travaux.length; i++) {
+    baliseGallerieModale.innerHTML += `
+      <figure>
+        <img src="${travaux[i].imageUrl}" alt="${travaux[i].title}" width="77">
+        <button type="button" id="${travaux[i].id}"><i class="fa-solid fa-trash-can"></i></button>
+      </figure>
+    `;
   }
 }
