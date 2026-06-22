@@ -102,14 +102,14 @@ function creerModale() {
  */
 function toggleModale(modale, btn) {
   if (btn) {
+    if (btn === modale) {
+      document
+        .querySelector(".modale-wrapper")
+        .addEventListener("click", (event) => {
+          event.stopPropagation();
+        });
+    }
     btn.addEventListener("click", () => {
-      if (btn === modale) {
-        document
-          .querySelector(".modale-wrapper")
-          .addEventListener("click", (event) => {
-            event.stopPropagation();
-          });
-      }
       modale.classList.toggle("hidden");
     });
   }
@@ -143,30 +143,61 @@ export function afficherModeEdition(token, travaux) {
     //Création de la modale
     creerModale();
 
-    //Ouverture/fermeture modale
     const modale = document.querySelector(".modale");
     const btnClose = document.querySelector(".modale-close");
+    const modaleWrapper = document.querySelector(".modale-wrapper");
     if (modale) {
+      //Ouverture/fermeture modale
       toggleModale(modale, btnModifier);
       toggleModale(modale, btnClose);
       toggleModale(modale, modale);
-    }
 
-    afficherTravauxModale(travaux);
+      afficherTravauxModale(travaux);
+      supprimerTravauxModale(travaux, token);
+    }
   } else {
     lienLogin.innerText = "login";
   }
 }
 
 function afficherTravauxModale(travaux) {
+  console.log("ok");
   const baliseGallerieModale = document.querySelector(".modale-gallery");
   baliseGallerieModale.innerHTML = "";
   for (let i = 0; i < travaux.length; i++) {
     baliseGallerieModale.innerHTML += `
       <figure>
         <img src="${travaux[i].imageUrl}" alt="${travaux[i].title}" width="77">
-        <button type="button" id="${travaux[i].id}"><i class="fa-solid fa-trash-can"></i></button>
+        <button type="button" id="${travaux[i].id}" class="btn-delete"><i class="fa-solid fa-trash-can"></i></button>
       </figure>
     `;
+  }
+}
+
+function supprimerTravauxModale(travaux, token) {
+  const boutonsSupprimer = document.querySelectorAll(".btn-delete");
+  for (let i = 0; i < boutonsSupprimer.length; i++) {
+    boutonsSupprimer[i].addEventListener("click", async (event) => {
+      const idProjetCible = event.currentTarget.id;
+      const reponse = await fetch(
+        `http://localhost:5678/api/works/${idProjetCible}`,
+        {
+          method: "DELETE",
+          headers: {
+            Accept: "*/*",
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      if (reponse.ok) {
+        const reponseTravaux = await fetch("http://localhost:5678/api/works");
+        travaux = await reponseTravaux.json();
+        afficherTravauxModale(travaux);
+        afficherProjets(travaux);
+
+        supprimerTravauxModale(travaux, token);
+      }
+    });
   }
 }
