@@ -26,5 +26,5 @@ const btnsFiltre = document.querySelectorAll("#portfolio button");
 filtrerProjet(btnsFiltre, travaux);
 
 if (token) {
-  afficherModeEdition(token, travaux);
+  afficherModeEdition(token, travaux, categories);
 }

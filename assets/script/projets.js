@@ -118,7 +118,7 @@ function toggleModale(modale, btn) {
  * Affiche les élements HTML du mode "Edition"
  * @param {string} token
  */
-export function afficherModeEdition(token, travaux) {
+export function afficherModeEdition(token, travaux, categories) {
   const lienLogin = document.getElementById("lien-login");
   if (token) {
     lienLogin.innerText = "logout";
@@ -154,6 +154,8 @@ export function afficherModeEdition(token, travaux) {
 
       afficherTravauxModale(travaux);
       supprimerTravauxModale(travaux, token);
+
+      afficherAjoutPhoto(categories);
     }
   } else {
     lienLogin.innerText = "login";
@@ -161,7 +163,6 @@ export function afficherModeEdition(token, travaux) {
 }
 
 function afficherTravauxModale(travaux) {
-  console.log("ok");
   const baliseGallerieModale = document.querySelector(".modale-gallery");
   baliseGallerieModale.innerHTML = "";
   for (let i = 0; i < travaux.length; i++) {
@@ -200,4 +201,42 @@ function supprimerTravauxModale(travaux, token) {
       }
     });
   }
+}
+
+function afficherAjoutPhoto(categories) {
+  const boutonAjouter = document.querySelector(".ajout-photo");
+  boutonAjouter.addEventListener("click", () => {
+    document.querySelector(".modale-wrapper h2").innerText = "Ajout photo";
+    document.querySelector(".modale-gallery").remove();
+    document.querySelector(".modale-wrapper hr").remove();
+    boutonAjouter.remove();
+
+    const elementFormulaire = document.createElement("form");
+    elementFormulaire.classList.add("modale-form");
+    elementFormulaire.setAttribute("method", "post");
+
+    let optionsFormulaire = "";
+    for (let i = 0; i < categories.length; i++) {
+      optionsFormulaire += `<option value="${categories[i].id}">${categories[i].name}</option>`;
+    }
+
+    elementFormulaire.innerHTML = `
+        <label for="photo" class="file-form">
+          <i class="img-form"></i>
+          <div class="btn-form">+ Ajouter photo</div>
+          <p>jpg, png : 4mo max</p>
+        </label>
+        <input type="file" name="photo" id="photo" accept="image/png, image/jpeg" />
+        <label for="titre">Titre</label>
+        <input type="text" name="titre" id="titre" />
+        <label for="categorie">Catégorie</label>
+        <select id="categorie-form" name="categorie-form">
+          ${optionsFormulaire}
+        </select>
+        <hr />
+        <input type="submit" value="Valider" disabled />
+    `;
+
+    document.querySelector(".modale-wrapper").append(elementFormulaire);
+  });
 }
