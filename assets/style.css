@@ -344,8 +344,13 @@ footer nav ul {
 		color: #B3B3B3;
 		margin-top: 67px;
 		margin-bottom: 38px;
+
+		&.hidden{
+			display:none;
+		}
 	}
 }
+
 .ajout-photo{
 	font-family: 'Syne';
 	font-weight: 700;
@@ -361,6 +366,9 @@ footer nav ul {
 	border-radius: 60px;
 	cursor: pointer;
 
+	&.hidden{
+		display:none;
+	}
 }
 .modale-close{
 	position: absolute;
@@ -372,6 +380,18 @@ footer nav ul {
 	border: none;
 	font-size: 20px;
 }
+.modale-back{
+	position: absolute;
+	top: 26px;
+	left: 30px;
+	cursor: pointer;
+	background: transparent;
+	border: none;
+	font-size: 20px;
+	&.hidden{
+		display:none;
+	}
+}
 
 .modale-gallery {
 	width: 100%;
@@ -379,6 +399,10 @@ footer nav ul {
 	grid-template-columns: repeat(5, 1fr);	
 	grid-column-gap: 9px;
 	grid-row-gap: 29px;
+
+	&.hidden{
+		display:none;
+	}
 	
 	img {
 		width: 100%;
@@ -423,6 +447,10 @@ footer nav ul {
 	input[type="submit"]:disabled{
 		background-color: #A7A7A7;
 	}
+
+	&.hidden{
+		display:none;
+	}
 }
 #photo{
 	display: none;
@@ -460,6 +488,5 @@ footer nav ul {
 		font-family: 'Work Sans';
 		font-size: 10px;
 		color: #444444;
-	}
-	
+	}	
 }

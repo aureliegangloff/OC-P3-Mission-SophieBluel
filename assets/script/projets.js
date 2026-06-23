@@ -90,9 +90,6 @@ function creerModale() {
       <button type="button" class="modale-close"><i class="fa-solid fa-xmark"></i></button>
     </div>
   `;
-
-  const btnClose = document.querySelector(".modale-close");
-
   document.body.prepend(modale);
 }
 /**
@@ -155,7 +152,7 @@ export function afficherModeEdition(token, travaux, categories) {
       afficherTravauxModale(travaux);
       supprimerTravauxModale(travaux, token);
 
-      afficherAjoutPhoto(categories);
+      afficherAjoutPhoto(categories, travaux);
     }
   } else {
     lienLogin.innerText = "login";
@@ -203,40 +200,73 @@ function supprimerTravauxModale(travaux, token) {
   }
 }
 
-function afficherAjoutPhoto(categories) {
+function afficherAjoutPhoto(categories, travaux, token) {
   const boutonAjouter = document.querySelector(".ajout-photo");
   boutonAjouter.addEventListener("click", () => {
     document.querySelector(".modale-wrapper h2").innerText = "Ajout photo";
-    document.querySelector(".modale-gallery").remove();
-    document.querySelector(".modale-wrapper hr").remove();
-    boutonAjouter.remove();
+    document.querySelector(".modale-gallery").classList.add("hidden");
+    document.querySelector(".modale-wrapper hr").classList.add("hidden");
+    boutonAjouter.classList.add("hidden");
 
-    const elementFormulaire = document.createElement("form");
-    elementFormulaire.classList.add("modale-form");
-    elementFormulaire.setAttribute("method", "post");
+    if (!document.querySelector(".modale-form")) {
+      const elementFormulaire = document.createElement("form");
+      elementFormulaire.classList.add("modale-form");
+      elementFormulaire.setAttribute("method", "post");
 
-    let optionsFormulaire = "";
-    for (let i = 0; i < categories.length; i++) {
-      optionsFormulaire += `<option value="${categories[i].id}">${categories[i].name}</option>`;
+      let optionsFormulaire = "";
+      for (let i = 0; i < categories.length; i++) {
+        optionsFormulaire += `<option value="${categories[i].id}">${categories[i].name}</option>`;
+      }
+
+      elementFormulaire.innerHTML = `
+      <label for="photo" class="file-form">
+      <i class="img-form"></i>
+      <div class="btn-form">+ Ajouter photo</div>
+      <p>jpg, png : 4mo max</p>
+      </label>
+      <input type="file" name="photo" id="photo" accept="image/png, image/jpeg" />
+      <label for="titre">Titre</label>
+      <input type="text" name="titre" id="titre" />
+      <label for="categorie-form">Catégorie</label>
+      <select id="categorie-form" name="categorie-form">
+      ${optionsFormulaire}
+      </select>
+      <hr />
+      <input type="submit" class="btn-envoi-photo" value="Valider" disabled />
+      `;
+
+      document.querySelector(".modale-wrapper").append(elementFormulaire);
+
+      const btnRetour = document.createElement("button");
+      btnRetour.classList.add("modale-back");
+      btnRetour.setAttribute("type", "button");
+      btnRetour.innerHTML = `<i class="fa-solid fa-arrow-left"></i>`;
+      document.querySelector(".modale-wrapper").append(btnRetour);
+    } else {
+      document.querySelector(".modale-form").classList.remove("hidden");
+      document.querySelector(".modale-back").classList.remove("hidden");
     }
 
-    elementFormulaire.innerHTML = `
-        <label for="photo" class="file-form">
-          <i class="img-form"></i>
-          <div class="btn-form">+ Ajouter photo</div>
-          <p>jpg, png : 4mo max</p>
-        </label>
-        <input type="file" name="photo" id="photo" accept="image/png, image/jpeg" />
-        <label for="titre">Titre</label>
-        <input type="text" name="titre" id="titre" />
-        <label for="categorie">Catégorie</label>
-        <select id="categorie-form" name="categorie-form">
-          ${optionsFormulaire}
-        </select>
-        <hr />
-        <input type="submit" value="Valider" disabled />
-    `;
-
-    document.querySelector(".modale-wrapper").append(elementFormulaire);
+    retourModale();
   });
 }
+
+function retourModale() {
+  const btnRetour = document.querySelector(".modale-back");
+
+  btnRetour?.addEventListener("click", () => {
+    console.log("ok");
+
+    document.querySelector(".modale-wrapper h2").innerText = "Galerie photo";
+    document.querySelector(".modale-gallery").classList.remove("hidden");
+    document.querySelector(".modale-wrapper hr").classList.remove("hidden");
+    document.querySelector(".ajout-photo").classList.remove("hidden");
+
+    document.querySelector(".modale-back").classList.add("hidden");
+    document.querySelector(".modale-form").classList.add("hidden");
+  });
+}
+
+// function envoiFormAjoutPhoto() {
+//   const btnEnvoi = document.querySelector("btn-envoi-photo");
+// }
