@@ -14,7 +14,7 @@ export function afficherProjets(travaux) {
   baliseGallerie.innerHTML = "";
   for (let i = 0; i < travaux.length; i++) {
     baliseGallerie.innerHTML += `
-      <figure>
+      <figure data-id="${travaux[i].id}">
         <img src="${travaux[i].imageUrl}" alt="${travaux[i].title}">
         <figcaption>${travaux[i].title}</figcaption>
       </figure>

@@ -77,7 +77,7 @@ export function supprimerTravauxModale(travaux, token) {
       if (reponse.ok) {
         let projetSupprime = boutonsSupprimer[i].parentElement;
         projetSupprime.remove();
-        // TODO Supprimer élément sélectionné dans la page
+        document.querySelector(`[data-id="${idProjetCible}"`).remove(); //suppression de l'image dans la page index
       }
     });
   }
@@ -157,6 +157,9 @@ function retourModale() {
   });
 }
 
+/**
+ * Affichage de la preview de la photo ajoutée
+ */
 function previewPhoto() {
   document.querySelector("#photo").addEventListener("change", () => {
     const preview = document.querySelector(".preview-img");
@@ -182,4 +185,7 @@ function previewPhoto() {
 
 // function envoiFormAjoutPhoto() {
 //   const btnEnvoi = document.querySelector("btn-envoi-photo");
+//   btnEnvoi.addEventListener("click", () => {
+
+//   });
 // }
