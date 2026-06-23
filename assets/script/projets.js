@@ -1,3 +1,10 @@
+import {
+  creerModale,
+  toggleModale,
+  afficherTravauxModale,
+  supprimerTravauxModale,
+  afficherAjoutPhoto,
+} from "./modale.js";
 /**
  * Affiche la liste des projets dans "Mes projets"
  * @param {Array} travaux
@@ -74,43 +81,6 @@ export function filtrerProjet(travaux) {
   });
 }
 
-/** Mode Edition */
-/**
- * Création de la modale
- */
-function creerModale() {
-  const modale = document.createElement("aside");
-  modale.classList.add("modale", "hidden");
-  modale.innerHTML += `
-    <div class="modale-wrapper">
-      <h2>Galerie photo</h2>
-      <div class="modale-gallery"></div>
-      <hr />
-      <button type="button" class="ajout-photo">Ajouter une photo</button>
-      <button type="button" class="modale-close"><i class="fa-solid fa-xmark"></i></button>
-    </div>
-  `;
-  document.body.appendChild(modale);
-}
-/**
- * Affichage de la modale
- * @param {HTMLElement} modale
- * @param {HTMLElement} btn
- */
-function toggleModale(modale, btn) {
-  if (btn) {
-    if (btn === modale) {
-      document
-        .querySelector(".modale-wrapper")
-        .addEventListener("click", (event) => {
-          event.stopPropagation();
-        });
-    }
-    btn.addEventListener("click", () => {
-      modale.classList.toggle("hidden");
-    });
-  }
-}
 /**
  * Affiche les élements HTML du mode "Edition"
  * @param {string} token
@@ -155,148 +125,3 @@ export function afficherModeEdition(token, travaux, categories) {
     afficherAjoutPhoto(categories);
   }
 }
-/**
- * Gestion de la déconnexion
- * @param {Array} categories
- * @param {Array} travaux
- */
-export function deconnecter(categories, travaux) {
-  const btnLogout = document.getElementById("lien-login");
-  btnLogout.addEventListener("click", (event) => {
-    sessionStorage.removeItem("token");
-    btnLogout.innerText = "login";
-    document.querySelector(".banniere-login").remove();
-    document.querySelector(".btn-modifier").remove();
-    document.querySelector(".modale").remove();
-    afficherFiltres(categories);
-    filtrerProjet(travaux);
-    event.preventDefault();
-  });
-}
-
-/**
- * Affiche la liste des travaux dans la modale
- * @param {Array} travaux
- */
-function afficherTravauxModale(travaux) {
-  const baliseGallerieModale = document.querySelector(".modale-gallery");
-  baliseGallerieModale.innerHTML = "";
-  for (let i = 0; i < travaux.length; i++) {
-    baliseGallerieModale.innerHTML += `
-      <figure>
-        <img src="${travaux[i].imageUrl}" alt="${travaux[i].title}" width="77">
-        <button type="button" id="${travaux[i].id}" class="btn-delete"><i class="fa-solid fa-trash-can"></i></button>
-      </figure>
-    `;
-  }
-}
-
-/**
- * Supprime un projet au clic sur une corbeille
- * @param {Array} travaux
- * @param {string} token
- */
-function supprimerTravauxModale(travaux, token) {
-  const boutonsSupprimer = document.querySelectorAll(".btn-delete");
-  for (let i = 0; i < boutonsSupprimer.length; i++) {
-    boutonsSupprimer[i].addEventListener("click", async (event) => {
-      const idProjetCible = event.currentTarget.id;
-      const reponse = await fetch(
-        `http://localhost:5678/api/works/${idProjetCible}`,
-        {
-          method: "DELETE",
-          headers: {
-            Accept: "*/*",
-            Authorization: `Bearer ${token}`,
-          },
-        },
-      );
-
-      if (reponse.ok) {
-        let projetSupprime = boutonsSupprimer[i].parentElement;
-        projetSupprime.remove();
-        // TODO Supprimer élément sélectionné dans la page
-      }
-    });
-  }
-}
-
-/**
- * Afficher le contenu "Ajout de Photo" dans la modale
- * @param {Array} categories
- */
-function afficherAjoutPhoto(categories) {
-  const boutonAjouter = document.querySelector(".ajout-photo");
-  boutonAjouter.addEventListener("click", () => {
-    document.querySelector(".modale-wrapper h2").innerText = "Ajout photo";
-    document.querySelector(".modale-gallery").classList.add("hidden");
-    document.querySelector(".modale-wrapper hr").classList.add("hidden");
-    boutonAjouter.classList.add("hidden");
-
-    if (!document.querySelector(".modale-form")) {
-      const elementFormulaire = document.createElement("form");
-      elementFormulaire.classList.add("modale-form");
-      elementFormulaire.setAttribute("method", "post");
-
-      let optionsFormulaire = "";
-      for (let i = 0; i < categories.length; i++) {
-        optionsFormulaire += `<option value="${categories[i].id}">${categories[i].name}</option>`;
-      }
-
-      elementFormulaire.innerHTML = `
-      <label for="photo" class="file-form">
-      <i class="img-form"></i>
-      <div class="btn-form">+ Ajouter photo</div>
-      <p>jpg, png : 4mo max</p>
-      </label>
-      <input type="file" name="photo" id="photo" accept="image/png, image/jpeg" onChange="previewPhoto()" />+++
-      <label for="titre">Titre</label>
-      <input type="text" name="titre" id="titre" />
-      <label for="categorie-form">Catégorie</label>
-      <select id="categorie-form" name="categorie-form">
-      ${optionsFormulaire}
-      </select>
-      <hr />
-      <input type="submit" class="btn-envoi-photo" value="Valider" disabled />
-      `;
-
-      document.querySelector(".modale-wrapper").append(elementFormulaire);
-
-      const btnRetour = document.createElement("button");
-      btnRetour.classList.add("modale-back");
-      btnRetour.setAttribute("type", "button");
-      btnRetour.innerHTML = `<i class="fa-solid fa-arrow-left"></i>`;
-      document.querySelector(".modale-wrapper").append(btnRetour);
-    } else {
-      document.querySelector(".modale-form").classList.remove("hidden");
-      document.querySelector(".modale-back").classList.remove("hidden");
-    }
-
-    retourModale();
-  });
-}
-
-/**
- * Gestion de l'affichage au click sur bouton "Retour" de la modale
- */
-function retourModale() {
-  const btnRetour = document.querySelector(".modale-back");
-
-  btnRetour?.addEventListener("click", () => {
-    document.querySelector(".modale-wrapper h2").innerText = "Galerie photo";
-    document.querySelector(".modale-gallery").classList.remove("hidden");
-    document.querySelector(".modale-wrapper hr").classList.remove("hidden");
-    document.querySelector(".ajout-photo").classList.remove("hidden");
-
-    document.querySelector(".modale-back").classList.add("hidden");
-    document.querySelector(".modale-form").classList.add("hidden");
-  });
-}
-
-// function previewPhoto(){
-
-// }
-
-// function envoiFormAjoutPhoto() {
-//   const btnEnvoi = document.querySelector("btn-envoi-photo");
-// }

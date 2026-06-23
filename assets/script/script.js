@@ -3,7 +3,6 @@ import {
   afficherFiltres,
   filtrerProjet,
   afficherModeEdition,
-  deconnecter,
 } from "./projets.js";
 
 // Récupération des travaux via L'API
@@ -18,6 +17,25 @@ categories = [...new Set(categories)]; // catégories uniques
 let token = window.sessionStorage.getItem("token");
 
 afficherProjets(travaux);
+
+/**
+ * Gestion de la déconnexion
+ * @param {Array} categories
+ * @param {Array} travaux
+ */
+function deconnecter(categories, travaux) {
+  const btnLogout = document.getElementById("lien-login");
+  btnLogout.addEventListener("click", (event) => {
+    sessionStorage.removeItem("token");
+    btnLogout.innerText = "login";
+    document.querySelector(".banniere-login").remove();
+    document.querySelector(".btn-modifier").remove();
+    document.querySelector(".modale").remove();
+    afficherFiltres(categories);
+    filtrerProjet(travaux);
+    event.preventDefault();
+  });
+}
 
 if (!token) {
   afficherFiltres(categories);
