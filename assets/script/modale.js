@@ -107,11 +107,12 @@ export function afficherAjoutPhoto(categories) {
 
       elementFormulaire.innerHTML = `
       <label for="photo" class="file-form">
-      <i class="img-form"></i>
-      <div class="btn-form">+ Ajouter photo</div>
-      <p>jpg, png : 4mo max</p>
+        <i class="img-form"></i>
+        <div class="btn-form">+ Ajouter photo</div>
+        <p>jpg, png : 4mo max</p>
+        <img src="" height="169" alt="Prévisualisation de l'image…" class="preview-img hidden" />
       </label>
-      <input type="file" name="photo" id="photo" accept="image/png, image/jpeg" onChange="previewPhoto()" />+++
+      <input type="file" name="photo" id="photo" accept="image/png, image/jpeg" />
       <label for="titre">Titre</label>
       <input type="text" name="titre" id="titre" />
       <label for="categorie-form">Catégorie</label>
@@ -135,6 +136,7 @@ export function afficherAjoutPhoto(categories) {
     }
 
     retourModale();
+    previewPhoto();
   });
 }
 
@@ -155,9 +157,28 @@ function retourModale() {
   });
 }
 
-// function previewPhoto(){
+function previewPhoto() {
+  document.querySelector("#photo").addEventListener("change", () => {
+    const preview = document.querySelector(".preview-img");
+    const file = document.querySelector("#photo").files[0];
+    const reader = new FileReader();
 
-// }
+    reader.addEventListener(
+      "load",
+      () => {
+        // on convertit l'image en une chaîne de caractères base64
+        preview.src = reader.result;
+      },
+      false,
+    );
+
+    if (file) {
+      reader.readAsDataURL(file);
+    }
+    document.querySelector(".file-form img").classList.remove("hidden");
+    document.querySelector(".file-form").classList.add("hidden");
+  });
+}
 
 // function envoiFormAjoutPhoto() {
 //   const btnEnvoi = document.querySelector("btn-envoi-photo");

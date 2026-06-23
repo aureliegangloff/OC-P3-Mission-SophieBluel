@@ -118,7 +118,7 @@ export function afficherModeEdition(token, travaux, categories) {
     toggleModale(modale, btnModifier);
     toggleModale(modale, btnClose);
     toggleModale(modale, modale);
-
+    // Gestion de l'affichage des projets
     afficherTravauxModale(travaux);
     supprimerTravauxModale(travaux, token);
 

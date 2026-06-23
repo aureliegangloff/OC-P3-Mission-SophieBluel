@@ -489,4 +489,14 @@ footer nav ul {
 		font-size: 10px;
 		color: #444444;
 	}	
+
+	&.hidden {
+		padding: 0;
+		.img-form, .btn-form, p{
+			display: none;
+		}
+	}
+}
+.preview-img.hidden{
+	display: none;
 }
