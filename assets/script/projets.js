@@ -152,13 +152,17 @@ export function afficherModeEdition(token, travaux, categories) {
       afficherTravauxModale(travaux);
       supprimerTravauxModale(travaux, token);
 
-      afficherAjoutPhoto(categories, travaux);
+      afficherAjoutPhoto(categories);
     }
   } else {
     lienLogin.innerText = "login";
   }
 }
 
+/**
+ * Affiche la liste des travaux dans la modale
+ * @param {Array} travaux
+ */
 function afficherTravauxModale(travaux) {
   const baliseGallerieModale = document.querySelector(".modale-gallery");
   baliseGallerieModale.innerHTML = "";
@@ -172,6 +176,11 @@ function afficherTravauxModale(travaux) {
   }
 }
 
+/**
+ * Supprime un projet au clic sur une corbeille
+ * @param {Array} travaux
+ * @param {string} token
+ */
 function supprimerTravauxModale(travaux, token) {
   const boutonsSupprimer = document.querySelectorAll(".btn-delete");
   for (let i = 0; i < boutonsSupprimer.length; i++) {
@@ -200,7 +209,11 @@ function supprimerTravauxModale(travaux, token) {
   }
 }
 
-function afficherAjoutPhoto(categories, travaux, token) {
+/**
+ * Afficher le contenu "Ajout de Photo" dans la modale
+ * @param {Array} categories
+ */
+function afficherAjoutPhoto(categories) {
   const boutonAjouter = document.querySelector(".ajout-photo");
   boutonAjouter.addEventListener("click", () => {
     document.querySelector(".modale-wrapper h2").innerText = "Ajout photo";
@@ -251,12 +264,13 @@ function afficherAjoutPhoto(categories, travaux, token) {
   });
 }
 
+/**
+ * Gestion de l'affichage au click sur bouton "Retour" de la modale
+ */
 function retourModale() {
   const btnRetour = document.querySelector(".modale-back");
 
   btnRetour?.addEventListener("click", () => {
-    console.log("ok");
-
     document.querySelector(".modale-wrapper h2").innerText = "Galerie photo";
     document.querySelector(".modale-gallery").classList.remove("hidden");
     document.querySelector(".modale-wrapper hr").classList.remove("hidden");
