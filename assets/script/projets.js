@@ -49,7 +49,8 @@ export function afficherFiltres(categories) {
  * @param {Array} btnsFiltre
  * @param {Array} travaux
  */
-export function filtrerProjet(btnsFiltre, travaux) {
+export function filtrerProjet(travaux) {
+  const btnsFiltre = document.querySelectorAll("#portfolio button");
   btnsFiltre.forEach((btn) => {
     btn.addEventListener("click", (event) => {
       //ajout de la classe select sur le btn sélectionné
@@ -79,8 +80,7 @@ export function filtrerProjet(btnsFiltre, travaux) {
  */
 function creerModale() {
   const modale = document.createElement("aside");
-  modale.classList.add("modale");
-  modale.classList.add("hidden");
+  modale.classList.add("modale", "hidden");
   modale.innerHTML += `
     <div class="modale-wrapper">
       <h2>Galerie photo</h2>
@@ -90,7 +90,7 @@ function creerModale() {
       <button type="button" class="modale-close"><i class="fa-solid fa-xmark"></i></button>
     </div>
   `;
-  document.body.prepend(modale);
+  document.body.appendChild(modale);
 }
 /**
  * Affichage de la modale
@@ -114,49 +114,64 @@ function toggleModale(modale, btn) {
 /**
  * Affiche les élements HTML du mode "Edition"
  * @param {string} token
+ * @param {Array} travaux
+ * @param {Array} categories
  */
 export function afficherModeEdition(token, travaux, categories) {
   const lienLogin = document.getElementById("lien-login");
-  if (token) {
-    lienLogin.innerText = "logout";
+  lienLogin.innerText = "logout";
 
-    // Ajout de la bannière de login
-    const banniereLogin = document.createElement("aside");
-    banniereLogin.classList.add("banniere-login");
-    banniereLogin.innerHTML += `<i class="fa-solid fa-pen-to-square"></i> Mode édition`;
-    document.body.prepend(banniereLogin);
+  // Ajout de la bannière de login
+  const banniereLogin = document.createElement("aside");
+  banniereLogin.classList.add("banniere-login");
+  banniereLogin.innerHTML += `<i class="fa-solid fa-pen-to-square"></i> Mode édition`;
+  document.body.prepend(banniereLogin);
 
-    // Ajout du bouton "modifier" sur le titre "Mes projets"
-    const btnModifier = document.createElement("button");
-    btnModifier.setAttribute("type", "button");
-    btnModifier.classList.add("btn-modifier");
-    const contenuBtnModifier = `<i class="fa-solid fa-pen-to-square"></i> modifier`;
-    btnModifier.innerHTML += contenuBtnModifier;
+  // Ajout du bouton "modifier" sur le titre "Mes projets"
+  const btnModifier = document.createElement("button");
+  btnModifier.setAttribute("type", "button");
+  btnModifier.classList.add("btn-modifier");
+  const contenuBtnModifier = `<i class="fa-solid fa-pen-to-square"></i> modifier`;
+  btnModifier.innerHTML += contenuBtnModifier;
 
-    // Changement texte du lien de navigation "Login"
-    const baliseTitrePortfolio = document.querySelector("#portfolio h2");
-    baliseTitrePortfolio.append(btnModifier);
+  const baliseTitrePortfolio = document.querySelector("#portfolio h2");
+  baliseTitrePortfolio.append(btnModifier);
 
-    //Création de la modale
-    creerModale();
+  //Création de la modale
+  creerModale();
 
-    const modale = document.querySelector(".modale");
-    const btnClose = document.querySelector(".modale-close");
-    const modaleWrapper = document.querySelector(".modale-wrapper");
-    if (modale) {
-      //Ouverture/fermeture modale
-      toggleModale(modale, btnModifier);
-      toggleModale(modale, btnClose);
-      toggleModale(modale, modale);
+  const modale = document.querySelector(".modale");
+  const btnClose = document.querySelector(".modale-close");
+  const modaleWrapper = document.querySelector(".modale-wrapper");
+  if (modale) {
+    //Ouverture/fermeture modale
+    toggleModale(modale, btnModifier);
+    toggleModale(modale, btnClose);
+    toggleModale(modale, modale);
 
-      afficherTravauxModale(travaux);
-      supprimerTravauxModale(travaux, token);
+    afficherTravauxModale(travaux);
+    supprimerTravauxModale(travaux, token);
 
-      afficherAjoutPhoto(categories);
-    }
-  } else {
-    lienLogin.innerText = "login";
+    afficherAjoutPhoto(categories);
   }
+}
+/**
+ * Gestion de la déconnexion
+ * @param {Array} categories
+ * @param {Array} travaux
+ */
+export function deconnecter(categories, travaux) {
+  const btnLogout = document.getElementById("lien-login");
+  btnLogout.addEventListener("click", (event) => {
+    sessionStorage.removeItem("token");
+    btnLogout.innerText = "login";
+    document.querySelector(".banniere-login").remove();
+    document.querySelector(".btn-modifier").remove();
+    document.querySelector(".modale").remove();
+    afficherFiltres(categories);
+    filtrerProjet(travaux);
+    event.preventDefault();
+  });
 }
 
 /**
@@ -198,12 +213,9 @@ function supprimerTravauxModale(travaux, token) {
       );
 
       if (reponse.ok) {
-        const reponseTravaux = await fetch("http://localhost:5678/api/works");
-        travaux = await reponseTravaux.json();
-        afficherTravauxModale(travaux);
-        afficherProjets(travaux);
-
-        supprimerTravauxModale(travaux, token);
+        let projetSupprime = boutonsSupprimer[i].parentElement;
+        projetSupprime.remove();
+        // TODO Supprimer élément sélectionné dans la page
       }
     });
   }
@@ -237,7 +249,7 @@ function afficherAjoutPhoto(categories) {
       <div class="btn-form">+ Ajouter photo</div>
       <p>jpg, png : 4mo max</p>
       </label>
-      <input type="file" name="photo" id="photo" accept="image/png, image/jpeg" />
+      <input type="file" name="photo" id="photo" accept="image/png, image/jpeg" onChange="previewPhoto()" />+++
       <label for="titre">Titre</label>
       <input type="text" name="titre" id="titre" />
       <label for="categorie-form">Catégorie</label>
@@ -280,6 +292,10 @@ function retourModale() {
     document.querySelector(".modale-form").classList.add("hidden");
   });
 }
+
+// function previewPhoto(){
+
+// }
 
 // function envoiFormAjoutPhoto() {
 //   const btnEnvoi = document.querySelector("btn-envoi-photo");

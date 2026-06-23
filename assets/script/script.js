@@ -3,6 +3,7 @@ import {
   afficherFiltres,
   filtrerProjet,
   afficherModeEdition,
+  deconnecter,
 } from "./projets.js";
 
 // Récupération des travaux via L'API
@@ -20,11 +21,10 @@ afficherProjets(travaux);
 
 if (!token) {
   afficherFiltres(categories);
-}
 
-const btnsFiltre = document.querySelectorAll("#portfolio button");
-filtrerProjet(btnsFiltre, travaux);
-
-if (token) {
+  filtrerProjet(travaux);
+} else {
   afficherModeEdition(token, travaux, categories);
+
+  deconnecter(categories, travaux);
 }
