@@ -122,6 +122,6 @@ export function afficherModeEdition(token, travaux, categories) {
     afficherTravauxModale(travaux);
     supprimerTravauxModale(travaux, token);
 
-    afficherAjoutPhoto(categories);
+    afficherAjoutPhoto(categories, token);
   }
 }

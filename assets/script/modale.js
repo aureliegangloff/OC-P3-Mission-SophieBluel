@@ -1,3 +1,9 @@
+import {
+  verifierChampVide,
+  verifierEmail,
+  afficherMessageErreur,
+} from "./form.js";
+
 /** Mode Edition */
 /**
  * Création de la modale
@@ -77,7 +83,7 @@ export function supprimerTravauxModale(travaux, token) {
       if (reponse.ok) {
         let projetSupprime = boutonsSupprimer[i].parentElement;
         projetSupprime.remove();
-        document.querySelector(`[data-id="${idProjetCible}"`).remove(); //suppression de l'image dans la page index
+        document.querySelector(`[data-id="${idProjetCible}"]`).remove(); //suppression de l'image dans la page index
       }
     });
   }
@@ -87,7 +93,7 @@ export function supprimerTravauxModale(travaux, token) {
  * Afficher le contenu "Ajout de Photo" dans la modale
  * @param {Array} categories
  */
-export function afficherAjoutPhoto(categories) {
+export function afficherAjoutPhoto(categories, token) {
   const boutonAjouter = document.querySelector(".ajout-photo");
   boutonAjouter.addEventListener("click", () => {
     document.querySelector(".modale-wrapper h2").innerText = "Ajout photo";
@@ -113,14 +119,15 @@ export function afficherAjoutPhoto(categories) {
         <img src="" height="169" alt="Prévisualisation de l'image…" class="preview-img hidden" />
       </label>
       <input type="file" name="photo" id="photo" accept="image/png, image/jpeg" />
-      <label for="titre">Titre</label>
+      <label for="titre" id="labeltitre">Titre</label>
       <input type="text" name="titre" id="titre" />
-      <label for="categorie-form">Catégorie</label>
-      <select id="categorie-form" name="categorie-form">
-      ${optionsFormulaire}
+      <label for="categorie-form" id="labelcategorie-form">Catégorie</label>
+      <select id="categorie-form" name="categorie-form" class="select-form">
+        <option value=""></option>
+        ${optionsFormulaire}
       </select>
       <hr />
-      <input type="submit" class="btn-envoi-photo" value="Valider" disabled />
+      <input type="submit" class="btn-envoi-photo" value="Valider" />
       `;
 
       document.querySelector(".modale-wrapper").append(elementFormulaire);
@@ -137,6 +144,8 @@ export function afficherAjoutPhoto(categories) {
 
     retourModale();
     previewPhoto();
+
+    envoiFormulaireAjoutPhoto(token);
   });
 }
 
@@ -183,9 +192,64 @@ function previewPhoto() {
   });
 }
 
-// function envoiFormAjoutPhoto() {
-//   const btnEnvoi = document.querySelector("btn-envoi-photo");
-//   btnEnvoi.addEventListener("click", () => {
+async function envoiProjetAPI(FormData, token) {
+  const reponse = await fetch("http://localhost:5678/api/works", {
+    method: "POST",
+    headers: {
+      Accept: "*/*",
+      Authorization: `Bearer ${token}`,
+    },
+    body: FormData,
+  });
 
-//   });
-// }
+  if (!reponse.ok) {
+    throw new Error("Erreur dans l'envoi du nouveau projet");
+  } else {
+    console.log("Projet créé !");
+  }
+}
+
+function envoiFormulaireAjoutPhoto(token) {
+  const formulairePhoto = document.querySelector(".modale-form");
+  const inputPhoto = document.querySelector("#photo");
+  const inputTitre = document.querySelector(".modale-form #titre");
+  const selectCategorie = document.querySelector("[name=categorie-form]");
+  const submitButton = document.querySelector(".btn-envoi-photo");
+
+  // Gestion de l'activation du bouton submit
+  function activerSubmit() {
+    submitButton.disabled = !(
+      inputTitre.value.trim() !== "" &&
+      selectCategorie.value !== "" &&
+      inputPhoto.files.length > 0
+    );
+  }
+  activerSubmit();
+  inputTitre.addEventListener("input", activerSubmit);
+  selectCategorie.addEventListener("change", activerSubmit);
+  inputPhoto.addEventListener("input", activerSubmit);
+
+  // Envoi du formulaire
+  formulairePhoto.addEventListener("submit", async (event) => {
+    try {
+      event.preventDefault();
+
+      // Vérification des champs
+      verifierChampVide(inputTitre);
+      verifierChampVide(selectCategorie);
+      if (!inputPhoto.files.length) {
+        throw new Error("Veuillez sélectionner une image");
+      }
+
+      // Envoi à l'API
+      const formData = new FormData();
+      formData.append("image", inputPhoto.files[0]);
+      formData.append("title", inputTitre.value.trim());
+      formData.append("category", selectCategorie.value);
+
+      await envoiProjetAPI(formData, token);
+    } catch (erreur) {
+      afficherMessageErreur(formulairePhoto, erreur.message);
+    }
+  });
+}

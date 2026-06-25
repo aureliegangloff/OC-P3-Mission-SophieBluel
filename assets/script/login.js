@@ -1,47 +1,11 @@
+import {
+  verifierChampVide,
+  verifierEmail,
+  afficherMessageErreur,
+} from "./form.js";
+
 const formulaireLogin = document.querySelector("#login form");
 
-/**
- * Vérifie si le champ est vide
- * @param {HTMLElement} champ
- */
-function verifierChampVide(champ) {
-  if (champ.value === "") {
-    throw new Error(`Le champ ${champ.id} est vide`);
-  }
-}
-/**
- * Vérifie la syntaxe de l'email
- * @param {HTMLElement} email
- */
-function verifierEmail(email) {
-  const regex = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/i;
-  if (!regex.test(email.value)) {
-    throw new Error("L'email est invalide");
-  }
-}
-/**
- * Affiche le message d'erreur s'il existe
- * @param {string} message
- * @returns
- */
-function afficherMessageErreur(message) {
-  let baliseMessage = document.querySelector(".message-erreur");
-
-  if (!message) {
-    if (baliseMessage) {
-      baliseMessage.remove();
-    }
-    return;
-  }
-
-  if (!baliseMessage) {
-    baliseMessage = document.createElement("div");
-    baliseMessage.classList.add("message-erreur");
-    formulaireLogin.appendChild(baliseMessage);
-  }
-
-  baliseMessage.textContent = message;
-}
 /**
  * Gère le login
  * @param {object} login
@@ -78,7 +42,7 @@ function envoiFormulaireLogin(formulaireLogin) {
 
       verifierEmail(email);
 
-      afficherMessageErreur("");
+      afficherMessageErreur(formulaireLogin, "");
 
       const login = {
         email: email.value,
@@ -86,7 +50,7 @@ function envoiFormulaireLogin(formulaireLogin) {
       };
       await envoyerLoginAPI(login);
     } catch (erreur) {
-      afficherMessageErreur(erreur.message);
+      afficherMessageErreur(formulaireLogin, erreur.message);
     }
   });
 }
