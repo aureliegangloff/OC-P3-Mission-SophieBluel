@@ -1,7 +1,6 @@
 import {
   creerModale,
   toggleModale,
-  afficherTravauxModale,
   supprimerTravauxModale,
   afficherAjoutPhoto,
 } from "./modale.js";
@@ -108,7 +107,7 @@ export function afficherModeEdition(token, travaux, categories) {
   baliseTitrePortfolio.append(btnModifier);
 
   //Création de la modale
-  creerModale();
+  creerModale(travaux);
 
   const modale = document.querySelector(".modale");
   const btnClose = document.querySelector(".modale-close");
@@ -118,10 +117,8 @@ export function afficherModeEdition(token, travaux, categories) {
     toggleModale(modale, btnModifier);
     toggleModale(modale, btnClose);
     toggleModale(modale, modale);
-    // Gestion de l'affichage des projets
-    afficherTravauxModale(travaux);
-    supprimerTravauxModale(token);
 
     afficherAjoutPhoto(categories, token);
+    supprimerTravauxModale(token);
   }
 }

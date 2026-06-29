@@ -15,7 +15,6 @@ categories = [...new Set(categories)]; // catégories uniques
 
 // Mode edition
 const token = window.sessionStorage.getItem("token");
-console.log("Token récupéré :", token);
 
 afficherProjets(travaux);
 

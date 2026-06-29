@@ -21,7 +21,6 @@ async function envoyerLoginAPI(login) {
     throw new Error("Erreur dans l’identifiant ou le mot de passe");
   } else {
     const data = await reponse.json();
-    console.log("Token après login :", data.token);
     const token = data.token;
     sessionStorage.setItem("token", token);
     window.location.href = "index.html";
