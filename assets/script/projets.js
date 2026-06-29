@@ -118,7 +118,7 @@ export function afficherModeEdition(token, travaux, categories) {
     toggleModale(modale, btnClose);
     toggleModale(modale, modale);
 
-    afficherAjoutPhoto(categories, token);
     supprimerTravauxModale(token);
+    afficherAjoutPhoto(categories, token);
   }
 }

@@ -61,28 +61,28 @@ export function toggleModale(modale, btn) {
  * @param {string} token
  */
 export function supprimerTravauxModale(token) {
-  const boutonsSupprimer = document.querySelectorAll(".btn-delete");
-  for (let i = 0; i < boutonsSupprimer.length; i++) {
-    boutonsSupprimer[i].addEventListener("click", async (event) => {
-      const idProjetCible = event.currentTarget.id;
-      const reponse = await fetch(
-        `http://localhost:5678/api/works/${idProjetCible}`,
-        {
-          method: "DELETE",
-          headers: {
-            Accept: "*/*",
-            Authorization: `Bearer ${token}`,
-          },
-        },
-      );
+  const modaleGallery = document.querySelector(".modale-gallery");
 
-      if (reponse.ok) {
-        let projetSupprime = boutonsSupprimer[i].parentElement;
-        projetSupprime.remove();
-        document.querySelector(`[data-id="${idProjetCible}"]`).remove(); //suppression de l'image dans la page index
-      }
+  // délégation de l'événement clic sur la galerie
+  modaleGallery.addEventListener("click", async (event) => {
+    const button = event.target.closest(".btn-delete"); // où était le clic ?
+
+    if (!button) return; // Si pas sur bouton, on ne fait rien
+
+    const id = button.id;
+
+    const reponse = await fetch(`http://localhost:5678/api/works/${id}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     });
-  }
+
+    if (reponse.ok) {
+      button.closest("figure").remove(); //supprime l'image de la galerie de la modale
+      document.querySelector(`[data-id="${id}"]`)?.remove(); // supprimer l'image de la galerie de la page d'accueil
+    }
+  });
 }
 
 /**
