@@ -118,6 +118,13 @@ export function afficherModeEdition(token, travaux, categories) {
     toggleModale(modale, btnClose);
     toggleModale(modale, modale);
 
+    //Ferme la modale quand touche Esc tapée
+    document.addEventListener("keyup", function (event) {
+      if (event.key == "Escape" && !modale.classList.contains("hidden")) {
+        modale.classList.add("hidden");
+      }
+    });
+
     supprimerTravauxModale(token);
     afficherAjoutPhoto(categories, token);
   }
