@@ -271,7 +271,11 @@ function envoyerFormulaireAjoutPhoto(token) {
         `;
 
         formulairePhoto.reset();
+        document.querySelector(".preview-img").classList.add("hidden");
+        document.querySelector(".file-form").classList.remove("hidden");
         submitButton.disabled = true;
+        document.querySelector(".modale-back").click();
+        document.querySelector(".modale").classList.add("hidden");
       }
     } catch (erreur) {
       afficherMessageErreur(formulairePhoto, erreur.message);
