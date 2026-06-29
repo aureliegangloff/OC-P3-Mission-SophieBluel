@@ -120,7 +120,7 @@ export function afficherModeEdition(token, travaux, categories) {
     toggleModale(modale, modale);
     // Gestion de l'affichage des projets
     afficherTravauxModale(travaux);
-    supprimerTravauxModale(travaux, token);
+    supprimerTravauxModale(token);
 
     afficherAjoutPhoto(categories, token);
   }

@@ -61,10 +61,9 @@ export function afficherTravauxModale(travaux) {
 
 /**
  * Supprime un projet au clic sur une corbeille
- * @param {Array} travaux
  * @param {string} token
  */
-export function supprimerTravauxModale(travaux, token) {
+export function supprimerTravauxModale(token) {
   const boutonsSupprimer = document.querySelectorAll(".btn-delete");
   for (let i = 0; i < boutonsSupprimer.length; i++) {
     boutonsSupprimer[i].addEventListener("click", async (event) => {
@@ -137,15 +136,14 @@ export function afficherAjoutPhoto(categories, token) {
       btnRetour.setAttribute("type", "button");
       btnRetour.innerHTML = `<i class="fa-solid fa-arrow-left"></i>`;
       document.querySelector(".modale-wrapper").append(btnRetour);
+      retourModale();
+      previewPhoto();
+      console.log("Token avant POST :", token);
+      envoyerFormulaireAjoutPhoto(token);
     } else {
       document.querySelector(".modale-form").classList.remove("hidden");
       document.querySelector(".modale-back").classList.remove("hidden");
     }
-
-    retourModale();
-    previewPhoto();
-
-    envoiFormulaireAjoutPhoto(token);
   });
 }
 
@@ -192,24 +190,35 @@ function previewPhoto() {
   });
 }
 
-async function envoiProjetAPI(FormData, token) {
+/**
+ * Ajout d'un projet à l'API
+ * @param {FormData} FormData
+ * @param {string} token
+ */
+async function envoiProjetAPI(formData, token) {
+  console.log(token);
   const reponse = await fetch("http://localhost:5678/api/works", {
     method: "POST",
     headers: {
       Accept: "*/*",
       Authorization: `Bearer ${token}`,
     },
-    body: FormData,
+    body: formData,
   });
 
   if (!reponse.ok) {
     throw new Error("Erreur dans l'envoi du nouveau projet");
   } else {
     console.log("Projet créé !");
+    const nouveauProjet = await reponse.json();
+    return nouveauProjet;
   }
 }
-
-function envoiFormulaireAjoutPhoto(token) {
+/**
+ * Envoi du formulaire d'ajout de photo
+ * @param {string} token
+ */
+function envoyerFormulaireAjoutPhoto(token) {
   const formulairePhoto = document.querySelector(".modale-form");
   const inputPhoto = document.querySelector("#photo");
   const inputTitre = document.querySelector(".modale-form #titre");
@@ -247,7 +256,24 @@ function envoiFormulaireAjoutPhoto(token) {
       formData.append("title", inputTitre.value.trim());
       formData.append("category", selectCategorie.value);
 
-      await envoiProjetAPI(formData, token);
+      const nouveauProjet = await envoiProjetAPI(formData, token);
+
+      //ajout du projet dans les galleries
+      const baliseGallerie = document.querySelector(".gallery");
+      baliseGallerie.innerHTML += `
+      <figure data-id="${nouveauProjet.id}">
+        <img src="${nouveauProjet.imageUrl}" alt="${nouveauProjet.title}">
+        <figcaption>${nouveauProjet.title}</figcaption>
+      </figure>
+    `;
+
+      const baliseGallerieModale = document.querySelector(".modale-gallery");
+      baliseGallerieModale.innerHTML += `
+      <figure>
+        <img src="${nouveauProjet.imageUrl}" alt="${nouveauProjet.title}" width="77">
+        <button type="button" id="${nouveauProjet.id}" class="btn-delete"><i class="fa-solid fa-trash-can"></i></button>
+      </figure>
+    `;
     } catch (erreur) {
       afficherMessageErreur(formulairePhoto, erreur.message);
     }

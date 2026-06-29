@@ -14,7 +14,8 @@ let categories = await reponseCategories.json();
 categories = [...new Set(categories)]; // catégories uniques
 
 // Mode edition
-let token = window.sessionStorage.getItem("token");
+const token = window.sessionStorage.getItem("token");
+console.log("Token récupéré :", token);
 
 afficherProjets(travaux);
 
