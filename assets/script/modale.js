@@ -252,22 +252,27 @@ function envoyerFormulaireAjoutPhoto(token) {
 
       const nouveauProjet = await envoiProjetAPI(formData, token);
 
-      //ajout du projet dans les galleries
-      const baliseGallerie = document.querySelector(".gallery");
-      baliseGallerie.innerHTML += `
-      <figure data-id="${nouveauProjet.id}">
+      if (nouveauProjet) {
+        //ajout du projet dans les galeries
+        const baliseGallerie = document.querySelector(".gallery");
+        baliseGallerie.innerHTML += `
+        <figure data-id="${nouveauProjet.id}">
         <img src="${nouveauProjet.imageUrl}" alt="${nouveauProjet.title}">
         <figcaption>${nouveauProjet.title}</figcaption>
-      </figure>
-      `;
+        </figure>
+        `;
 
-      const baliseGallerieModale = document.querySelector(".modale-gallery");
-      baliseGallerieModale.innerHTML += `
-      <figure>
+        const baliseGallerieModale = document.querySelector(".modale-gallery");
+        baliseGallerieModale.innerHTML += `
+        <figure>
         <img src="${nouveauProjet.imageUrl}" alt="${nouveauProjet.title}" width="77">
         <button type="button" id="${nouveauProjet.id}" class="btn-delete"><i class="fa-solid fa-trash-can"></i></button>
-      </figure>
-      `;
+        </figure>
+        `;
+
+        formulairePhoto.reset();
+        submitButton.disabled = true;
+      }
     } catch (erreur) {
       afficherMessageErreur(formulairePhoto, erreur.message);
     }
