@@ -26,6 +26,7 @@ afficherProjets(travaux);
 function deconnecter(categories, travaux) {
   const btnLogout = document.getElementById("lien-login");
   btnLogout.addEventListener("click", (event) => {
+    event.preventDefault();
     sessionStorage.removeItem("token");
     btnLogout.innerText = "login";
     document.querySelector(".banniere-login").remove();
@@ -33,7 +34,6 @@ function deconnecter(categories, travaux) {
     document.querySelector(".modale").remove();
     afficherFiltres(categories);
     filtrerProjet(travaux);
-    event.preventDefault();
   });
 }
 

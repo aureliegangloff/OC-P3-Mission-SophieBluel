@@ -108,22 +108,22 @@ export function afficherAjoutPhoto(categories, token) {
       }
 
       elementFormulaire.innerHTML = `
-      <label for="photo" class="file-form">
-        <i class="img-form"></i>
-        <div class="btn-form">+ Ajouter photo</div>
-        <p>jpg, png : 4mo max</p>
-        <img src="" height="169" alt="Prévisualisation de l'image…" class="preview-img hidden" />
-      </label>
-      <input type="file" name="photo" id="photo" accept="image/png, image/jpeg" />
-      <label for="titre" id="labeltitre">Titre</label>
-      <input type="text" name="titre" id="titre" />
-      <label for="categorie-form" id="labelcategorie-form">Catégorie</label>
-      <select id="categorie-form" name="categorie-form" class="select-form">
-        <option value=""></option>
-        ${optionsFormulaire}
-      </select>
-      <hr />
-      <input type="submit" class="btn-envoi-photo" value="Valider" />
+        <label for="photo" class="file-form">
+          <i class="img-form"></i>
+          <div class="btn-form">+ Ajouter photo</div>
+          <p>jpg, png : 4mo max</p>
+          <img src="" height="169" alt="Prévisualisation de l'image…" class="preview-img hidden" />
+        </label>
+        <input type="file" name="photo" id="photo" accept="image/png, image/jpeg" />
+        <label for="titre" id="labeltitre">Titre</label>
+        <input type="text" name="titre" id="titre" />
+        <label for="categorie-form" id="labelcategorie-form">Catégorie</label>
+        <select id="categorie-form" name="categorie-form" class="select-form">
+          <option value=""></option>
+          ${optionsFormulaire}
+        </select>
+        <hr />
+        <input type="submit" class="btn-envoi-photo" value="Valider" />
       `;
 
       document.querySelector(".modale-wrapper").append(elementFormulaire);
@@ -134,7 +134,7 @@ export function afficherAjoutPhoto(categories, token) {
       btnRetour.innerHTML = `<i class="fa-solid fa-arrow-left"></i>`;
       document.querySelector(".modale-wrapper").append(btnRetour);
       retourModale();
-      previewPhoto();
+      previsualiserPhoto();
       envoyerFormulaireAjoutPhoto(token);
     } else {
       document.querySelector(".modale-form").classList.remove("hidden");
@@ -154,7 +154,6 @@ function retourModale() {
     document.querySelector(".modale-gallery").classList.remove("hidden");
     document.querySelector(".modale-wrapper hr").classList.remove("hidden");
     document.querySelector(".ajout-photo").classList.remove("hidden");
-
     document.querySelector(".modale-back").classList.add("hidden");
     document.querySelector(".modale-form").classList.add("hidden");
   });
@@ -163,24 +162,24 @@ function retourModale() {
 /**
  * Affichage de la preview de la photo ajoutée
  */
-function previewPhoto() {
+function previsualiserPhoto() {
   document.querySelector("#photo").addEventListener("change", () => {
     const preview = document.querySelector(".preview-img");
     const file = document.querySelector("#photo").files[0];
-    const reader = new FileReader();
 
+    const reader = new FileReader(); //Création d'un lecteur de fichier
     reader.addEventListener(
       "load",
       () => {
-        // on convertit l'image en une chaîne de caractères base64
+        // on convertit l'image en une chaîne de caractères base64 et l'ajoute dans le src de l'image
         preview.src = reader.result;
       },
       false,
     );
-
     if (file) {
-      reader.readAsDataURL(file);
+      reader.readAsDataURL(file); //lecture du contenu de l'image
     }
+    //Affichage de la balise image au lieu de l'input file
     document.querySelector(".file-form img").classList.remove("hidden");
     document.querySelector(".file-form").classList.add("hidden");
   });
@@ -256,18 +255,18 @@ function envoyerFormulaireAjoutPhoto(token) {
         //ajout du projet dans les galeries
         const baliseGallerie = document.querySelector(".gallery");
         baliseGallerie.innerHTML += `
-        <figure data-id="${nouveauProjet.id}">
-        <img src="${nouveauProjet.imageUrl}" alt="${nouveauProjet.title}">
-        <figcaption>${nouveauProjet.title}</figcaption>
-        </figure>
+          <figure data-id="${nouveauProjet.id}">
+            <img src="${nouveauProjet.imageUrl}" alt="${nouveauProjet.title}">
+            <figcaption>${nouveauProjet.title}</figcaption>
+          </figure>
         `;
 
         const baliseGallerieModale = document.querySelector(".modale-gallery");
         baliseGallerieModale.innerHTML += `
-        <figure>
-        <img src="${nouveauProjet.imageUrl}" alt="${nouveauProjet.title}" width="77">
-        <button type="button" id="${nouveauProjet.id}" class="btn-delete"><i class="fa-solid fa-trash-can"></i></button>
-        </figure>
+          <figure>
+            <img src="${nouveauProjet.imageUrl}" alt="${nouveauProjet.title}" width="77">
+            <button type="button" id="${nouveauProjet.id}" class="btn-delete"><i class="fa-solid fa-trash-can"></i></button>
+          </figure>
         `;
 
         formulairePhoto.reset();
