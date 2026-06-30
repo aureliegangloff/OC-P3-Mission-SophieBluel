@@ -5,18 +5,38 @@ import {
   afficherModeEdition,
 } from "./projets.js";
 
-// Récupération des travaux via L'API
-const reponseTravaux = await fetch("http://localhost:5678/api/works");
-const travaux = await reponseTravaux.json();
-// Récupération des categories via L'API
-const reponseCategories = await fetch("http://localhost:5678/api/categories");
-let categories = await reponseCategories.json();
-categories = [...new Set(categories)]; // catégories uniques
+try {
+  let travaux;
+  let categories;
 
-// Mode edition
-const token = window.sessionStorage.getItem("token");
+  // Récupération des travaux via L'API
+  const reponseTravaux = await fetch("http://localhost:5678/api/works");
 
-afficherProjets(travaux);
+  travaux = await reponseTravaux.json();
+  afficherProjets(travaux);
+
+  const reponseCategories = await fetch("http://localhost:5678/api/categories");
+
+  // Récupération des categories via L'API
+  categories = await reponseCategories.json();
+
+  // Mode edition
+  const token = window.sessionStorage.getItem("token");
+  if (!token) {
+    afficherFiltres(categories);
+
+    filtrerProjet(travaux);
+  } else {
+    afficherModeEdition(token, travaux, categories);
+
+    deconnecter(categories, travaux);
+  }
+} catch (erreur) {
+  const msgErreur = document.createElement("p");
+  msgErreur.classList.add("empty-state");
+  msgErreur.innerText = "Aucun projet à afficher.";
+  document.querySelector("#portfolio").appendChild(msgErreur);
+}
 
 /**
  * Gestion de la déconnexion
@@ -28,21 +48,6 @@ function deconnecter(categories, travaux) {
   btnLogout.addEventListener("click", (event) => {
     event.preventDefault();
     sessionStorage.removeItem("token");
-    btnLogout.innerText = "login";
-    document.querySelector(".banniere-login").remove();
-    document.querySelector(".btn-modifier").remove();
-    document.querySelector(".modale").remove();
-    afficherFiltres(categories);
-    filtrerProjet(travaux);
+    window.location.reload();
   });
-}
-
-if (!token) {
-  afficherFiltres(categories);
-
-  filtrerProjet(travaux);
-} else {
-  afficherModeEdition(token, travaux, categories);
-
-  deconnecter(categories, travaux);
 }

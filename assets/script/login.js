@@ -50,7 +50,12 @@ function envoiFormulaireLogin(formulaireLogin) {
       };
       await envoyerLoginAPI(login);
     } catch (erreur) {
-      afficherMessageErreur(formulaireLogin, erreur.message);
+      const message =
+        erreur.message === "Failed to fetch"
+          ? "Impossible de se connecter à l'API."
+          : erreur.message;
+
+      afficherMessageErreur(formulaireLogin, message);
     }
   });
 }

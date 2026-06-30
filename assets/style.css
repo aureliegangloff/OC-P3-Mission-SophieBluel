@@ -190,6 +190,18 @@ li:hover {
 .gallery img {
 	width: 100%;
 }
+.empty-state{
+	border: 1px solid gray;
+	border-radius: 10px;
+	color: gray;
+	font-family: 'Work Sans';
+	font-size: 14px;
+	padding: 30px;
+	display: block;
+	margin-top: 30px;
+	text-align: center;
+	font-style: italic;
+}
 #contact {
 	width: 50%;
 	margin: auto;
